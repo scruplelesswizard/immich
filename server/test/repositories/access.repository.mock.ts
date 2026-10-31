@@ -84,6 +84,9 @@ export const newAccessRepositoryMock = (): IAccessRepositoryMock => {
       checkPartnerAccess: vitest.fn().mockResolvedValue(new Set()),
     },
 
+    lockedGroup: {
+      checkOwnerAccess: vitest.fn().mockResolvedValue(new Set()),
+    },
     tag: {
       checkOwnerAccess: vitest.fn().mockResolvedValue(new Set()),
     },

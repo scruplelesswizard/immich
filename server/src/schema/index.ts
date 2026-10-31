@@ -57,6 +57,8 @@ import { FaceSearchTable } from 'src/schema/tables/face-search.table.js';
 import { GeodataPlacesTable } from 'src/schema/tables/geodata-places.table.js';
 import { IntegrityReportTable } from 'src/schema/tables/integrity-report.table.js';
 import { LibraryTable } from 'src/schema/tables/library.table.js';
+import { LockedGroupAssetTable } from 'src/schema/tables/locked-group-asset.table.js';
+import { LockedGroupTable } from 'src/schema/tables/locked-group.table.js';
 import { MemoryAssetAuditTable } from 'src/schema/tables/memory-asset-audit.table.js';
 import { MemoryAssetTable } from 'src/schema/tables/memory-asset.table.js';
 import { MemoryAuditTable } from 'src/schema/tables/memory-audit.table.js';
@@ -156,6 +158,8 @@ export class ImmichDatabase {
     StackAuditTable,
     SessionSyncCheckpointTable,
     SystemMetadataTable,
+    LockedGroupTable,
+    LockedGroupAssetTable,
     TagTable,
     TagAssetTable,
     TagClosureTable,
@@ -292,6 +296,8 @@ export interface DB {
 
   system_metadata: SystemMetadataTable;
 
+  locked_group: LockedGroupTable;
+  locked_group_asset: LockedGroupAssetTable;
   tag: TagTable;
   tag_asset: TagAssetTable;
   tag_closure: TagClosureTable;

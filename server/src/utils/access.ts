@@ -331,6 +331,13 @@ const checkOtherAccess = async (access: AccessRepository, request: OtherAccessRe
       return access.notification.checkOwnerAccess(auth.user.id, ids);
     }
 
+    case Permission.LockedGroupAsset:
+    case Permission.LockedGroupRead:
+    case Permission.LockedGroupUpdate:
+    case Permission.LockedGroupDelete: {
+      return await access.lockedGroup.checkOwnerAccess(auth.user.id, ids);
+    }
+
     case Permission.TagAsset:
     case Permission.TagRead:
     case Permission.TagUpdate:

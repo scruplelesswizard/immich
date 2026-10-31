@@ -307,6 +307,12 @@ export enum Permission {
   SystemMetadataRead = 'systemMetadata.read',
   SystemMetadataUpdate = 'systemMetadata.update',
 
+  LockedGroupCreate = 'lockedGroup.create',
+  LockedGroupRead = 'lockedGroup.read',
+  LockedGroupUpdate = 'lockedGroup.update',
+  LockedGroupDelete = 'lockedGroup.delete',
+  LockedGroupAsset = 'lockedGroup.asset',
+
   TagCreate = 'tag.create',
   TagRead = 'tag.read',
   TagUpdate = 'tag.update',
@@ -1277,6 +1283,7 @@ export enum ApiTag {
   Integrity = 'Integrity (admin)',
   Jobs = 'Jobs',
   Libraries = 'Libraries',
+  LockedGroups = 'Locked groups',
   Maintenance = 'Maintenance (admin)',
   Map = 'Map',
   Memories = 'Memories',

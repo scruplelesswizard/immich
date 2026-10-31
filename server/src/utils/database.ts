@@ -364,6 +364,31 @@ export function truncatedDate<O>(order: AssetOrderBy = AssetOrderBy.TakenAt, siz
   return sql<O>`date_trunc(${sql.lit(size)}, ${sql.ref(order === AssetOrderBy.CreatedAt ? 'asset.createdAt' : 'localDateTime')} AT TIME ZONE 'UTC') AT TIME ZONE 'UTC'`;
 }
 
+export function withLockedGroupFilter<O>(
+  qb: SelectQueryBuilder<DB, 'asset', O>,
+  options: { lockedGroupId?: string; isInLockedGroup?: boolean },
+) {
+  return qb
+    .$if(!!options.lockedGroupId, (qb) =>
+      qb.where((eb) =>
+        eb.exists(
+          eb
+            .selectFrom('locked_group_asset')
+            .whereRef('locked_group_asset.assetId', '=', 'asset.id')
+            .where('locked_group_asset.lockedGroupId', '=', options.lockedGroupId!),
+        ),
+      ),
+    )
+    .$if(options.isInLockedGroup !== undefined, (qb) =>
+      qb.where((eb) => {
+        const inGroup = eb.exists(
+          eb.selectFrom('locked_group_asset').whereRef('locked_group_asset.assetId', '=', 'asset.id'),
+        );
+        return options.isInLockedGroup ? inGroup : eb.not(inGroup);
+      }),
+    );
+}
+
 export function withTagId<O>(qb: SelectQueryBuilder<DB, 'asset', O>, tagId: string) {
   return qb.where((eb) =>
     eb.exists(
