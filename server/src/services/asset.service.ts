@@ -117,6 +117,10 @@ export class AssetService extends BaseService {
 
     const asset = await this.assetRepository.update({ id, ...rest });
 
+    if (rest.visibility && rest.visibility !== AssetVisibility.Locked) {
+      await this.lockedGroupRepository.removeAssetsFromAll([id]);
+    }
+
     if (previousMotion && asset) {
       await onAfterUnlink(repos, {
         userId: auth.user.id,
@@ -187,6 +191,10 @@ export class AssetService extends BaseService {
 
     if (visibility === AssetVisibility.Locked) {
       await this.albumRepository.removeAssetsFromAll(ids);
+    }
+
+    if (visibility && visibility !== AssetVisibility.Locked) {
+      await this.lockedGroupRepository.removeAssetsFromAll(ids);
     }
 
     if (shouldWriteSidecar) {

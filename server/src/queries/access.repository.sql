@@ -314,6 +314,15 @@ where
   "stack"."id" in ($1)
   and "stack"."ownerId" = $2
 
+-- AccessRepository.lockedGroup.checkOwnerAccess
+select
+  "locked_group"."id"
+from
+  "locked_group"
+where
+  "locked_group"."id" in ($1)
+  and "locked_group"."userId" = $2
+
 -- AccessRepository.tag.checkOwnerAccess
 select
   "tag"."id"

@@ -49,6 +49,20 @@ export class TimelineService extends BaseService {
       requireElevatedPermission(auth);
     }
 
+    if (dto.lockedGroupId || dto.isInLockedGroup !== undefined) {
+      requireElevatedPermission(auth);
+      if (dto.visibility && dto.visibility !== AssetVisibility.Locked) {
+        throw new BadRequestException('Locked group filters can only be used with locked assets');
+      }
+      dto.visibility = AssetVisibility.Locked;
+      dto.userId = auth.user.id;
+      dto.withPartners = false;
+    }
+
+    if (dto.lockedGroupId) {
+      await this.requireAccess({ auth, permission: Permission.LockedGroupRead, ids: [dto.lockedGroupId] });
+    }
+
     if (dto.albumId) {
       await this.requireAccess({ auth, permission: Permission.AlbumRead, ids: [dto.albumId] });
     } else {

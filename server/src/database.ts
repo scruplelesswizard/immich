@@ -82,6 +82,13 @@ export type ApiKey = {
   permissions: Permission[];
 };
 
+export type LockedGroup = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Tag = {
   id: string;
   value: string;
@@ -407,6 +414,7 @@ export const columns = {
     'quotaSizeInBytes',
     'quotaUsageInBytes',
   ],
+  lockedGroup: ['locked_group.id', 'locked_group.name', 'locked_group.createdAt', 'locked_group.updatedAt'],
   tag: ['tag.id', 'tag.value', 'tag.createdAt', 'tag.updatedAt', 'tag.color', 'tag.parentId'],
   apiKey: ['id', 'name', 'userId', 'createdAt', 'updatedAt', 'permissions'],
   notification: ['id', 'createdAt', 'level', 'type', 'title', 'description', 'data', 'readAt'],

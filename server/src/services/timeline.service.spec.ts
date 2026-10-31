@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { AssetVisibility } from 'src/enum.js';
 import { TimelineService } from 'src/services/timeline.service.js';
 import { authStub } from 'test/fixtures/auth.stub.js';
@@ -45,6 +45,58 @@ describe(TimelineService.name, () => {
           bbox: { west: -70, south: -30, east: 120, north: 55 },
         },
         authStub.admin,
+      );
+    });
+  });
+
+  describe('locked group filters', () => {
+    const elevated = authStub.adminWithElevatedPermission;
+
+    it('should require an elevated session', async () => {
+      await expect(sut.getTimeBuckets(authStub.admin, { isInLockedGroup: false })).rejects.toBeInstanceOf(
+        UnauthorizedException,
+      );
+      await expect(sut.getTimeBuckets(authStub.admin, { lockedGroupId: 'group-1' })).rejects.toBeInstanceOf(
+        UnauthorizedException,
+      );
+      expect(mocks.asset.getTimeBuckets).not.toHaveBeenCalled();
+    });
+
+    it('should reject a non-locked visibility', async () => {
+      await expect(
+        sut.getTimeBuckets(elevated, { isInLockedGroup: false, visibility: AssetVisibility.Timeline }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('should force locked visibility and the own user for ungrouped assets', async () => {
+      mocks.asset.getTimeBuckets.mockResolvedValue([]);
+      await sut.getTimeBuckets(elevated, { isInLockedGroup: false, userId: 'someone-else', withPartners: true });
+      expect(mocks.asset.getTimeBuckets).toHaveBeenCalledWith(
+        {
+          isInLockedGroup: false,
+          visibility: AssetVisibility.Locked,
+          withPartners: false,
+          userIds: [elevated.user.id],
+        },
+        elevated,
+      );
+    });
+
+    it('should require access to the group', async () => {
+      mocks.access.lockedGroup.checkOwnerAccess.mockResolvedValue(new Set());
+      await expect(sut.getTimeBuckets(elevated, { lockedGroupId: 'group-1' })).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
+      expect(mocks.asset.getTimeBuckets).not.toHaveBeenCalled();
+    });
+
+    it('should filter by group', async () => {
+      mocks.access.lockedGroup.checkOwnerAccess.mockResolvedValue(new Set(['group-1']));
+      mocks.asset.getTimeBuckets.mockResolvedValue([]);
+      await sut.getTimeBuckets(elevated, { lockedGroupId: 'group-1' });
+      expect(mocks.asset.getTimeBuckets).toHaveBeenCalledWith(
+        expect.objectContaining({ lockedGroupId: 'group-1', visibility: AssetVisibility.Locked }),
+        elevated,
       );
     });
   });

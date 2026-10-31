@@ -49,6 +49,7 @@ import {
   withFilePath,
   withFiles,
   withLibrary,
+  withLockedGroupFilter,
   withOwner,
   withSmartSearch,
   withTagId,
@@ -85,6 +86,8 @@ interface AssetBuilderOptions {
   isDuplicate?: boolean;
   albumId?: string;
   tagId?: string;
+  lockedGroupId?: string;
+  isInLockedGroup?: boolean;
   personId?: string;
   userIds?: string[];
   withStacked?: boolean;
@@ -799,7 +802,8 @@ export class AssetRepository {
           .$if(options.isDuplicate !== undefined, (qb) =>
             qb.where('asset.duplicateId', options.isDuplicate ? 'is not' : 'is', null),
           )
-          .$if(!!options.tagId, (qb) => withTagId(qb, options.tagId!)),
+          .$if(!!options.tagId, (qb) => withTagId(qb, options.tagId!))
+          .$call((qb) => withLockedGroupFilter(qb, options)),
       )
       .selectFrom('asset')
       .select(sql<string>`("timeBucket" AT TIME ZONE 'UTC')::date::text`.as('timeBucket'))
@@ -918,6 +922,7 @@ export class AssetRepository {
           )
           .$if(!!options.isTrashed, (qb) => qb.where('asset.status', '!=', AssetStatus.Deleted))
           .$if(!!options.tagId, (qb) => withTagId(qb, options.tagId!))
+          .$call((qb) => withLockedGroupFilter(qb, options))
           .orderBy(
             options.orderBy === AssetOrderBy.CreatedAt
               ? sql`"createdAt"`

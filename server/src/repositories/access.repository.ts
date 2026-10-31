@@ -609,6 +609,26 @@ class PartnerAccess {
   }
 }
 
+class LockedGroupAccess {
+  constructor(private db: Kysely<DB>) {}
+
+  @GenerateSql({ params: [DummyValue.UUID, DummyValue.UUID_SET] })
+  @ChunkedSet({ paramIndex: 1 })
+  async checkOwnerAccess(userId: string, lockedGroupIds: Set<string>) {
+    if (lockedGroupIds.size === 0) {
+      return new Set<string>();
+    }
+
+    return this.db
+      .selectFrom('locked_group')
+      .select('locked_group.id')
+      .where('locked_group.id', 'in', [...lockedGroupIds])
+      .where('locked_group.userId', '=', userId)
+      .execute()
+      .then((groups) => new Set(groups.map((group) => group.id)));
+  }
+}
+
 class TagAccess {
   constructor(private db: Kysely<DB>) {}
 
@@ -665,6 +685,7 @@ export class AccessRepository {
   partner: PartnerAccess;
   session: SessionAccess;
   stack: StackAccess;
+  lockedGroup: LockedGroupAccess;
   tag: TagAccess;
   timeline: TimelineAccess;
   workflow: WorkflowAccess;
@@ -684,6 +705,7 @@ export class AccessRepository {
     this.partner = new PartnerAccess(db);
     this.session = new SessionAccess(db);
     this.stack = new StackAccess(db);
+    this.lockedGroup = new LockedGroupAccess(db);
     this.tag = new TagAccess(db);
     this.timeline = new TimelineAccess(db);
     this.workflow = new WorkflowAccess(db);

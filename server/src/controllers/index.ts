@@ -18,6 +18,7 @@ import { FaceController } from 'src/controllers/face.controller.js';
 import { IntegrityAdminController } from 'src/controllers/integrity-admin.controller.js';
 import { JobController } from 'src/controllers/job.controller.js';
 import { LibraryController } from 'src/controllers/library.controller.js';
+import { LockedGroupController } from 'src/controllers/locked-group.controller.js';
 import { MaintenanceController } from 'src/controllers/maintenance.controller.js';
 import { MapController } from 'src/controllers/map.controller.js';
 import { MemoryController } from 'src/controllers/memory.controller.js';
@@ -66,6 +67,7 @@ export const controllers = [
   IntegrityAdminController,
   JobController,
   LibraryController,
+  LockedGroupController,
   MaintenanceController,
   MapController,
   MemoryController,

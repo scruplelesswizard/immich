@@ -45,6 +45,7 @@ import { LoggingRepository } from 'src/repositories/logging.repository.js';
 import { MachineLearningRepository } from 'src/repositories/machine-learning.repository.js';
 import { MapRepository } from 'src/repositories/map.repository.js';
 import { MediaRepository } from 'src/repositories/media.repository.js';
+import { LockedGroupRepository } from 'src/repositories/locked-group.repository.js';
 import { MemoryRepository } from 'src/repositories/memory.repository.js';
 import { MetadataRepository } from 'src/repositories/metadata.repository.js';
 import { NotificationRepository } from 'src/repositories/notification.repository.js';
@@ -492,6 +493,7 @@ const newRealRepository = <T extends BaseServiceDeps[number]>(key: T, db: Kysely
     case IntegrityRepository:
     case MemoryRepository:
     case LibraryRepository:
+    case LockedGroupRepository:
     case NotificationRepository:
     case OcrRepository:
     case PartnerRepository:
@@ -560,6 +562,7 @@ const newMockRepository = <T>(key: ClassConstructor<T>) => {
     case ConfigRepository:
     case CryptoRepository:
     case LibraryRepository:
+    case LockedGroupRepository:
     case MemoryRepository:
     case IntegrityRepository:
     case NotificationRepository:
