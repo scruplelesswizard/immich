@@ -10560,6 +10560,382 @@
         "x-immich-state": "Stable"
       }
     },
+    "/locked-groups": {
+      "get": {
+        "description": "Retrieve all locked groups of the current user. Requires an elevated session.",
+        "operationId": "getLockedGroups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LockedGroupResponseDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Retrieve locked groups",
+        "tags": [
+          "Locked groups"
+        ],
+        "x-immich-history": [
+          {
+            "version": "v3.4.0",
+            "state": "Added"
+          }
+        ],
+        "x-immich-permission": "lockedGroup.read"
+      },
+      "post": {
+        "description": "Create a named group inside the locked folder. Requires an elevated session.",
+        "operationId": "createLockedGroup",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LockedGroupCreateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockedGroupResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Create a locked group",
+        "tags": [
+          "Locked groups"
+        ],
+        "x-immich-history": [
+          {
+            "version": "v3.4.0",
+            "state": "Added"
+          }
+        ],
+        "x-immich-permission": "lockedGroup.create"
+      }
+    },
+    "/locked-groups/{id}": {
+      "delete": {
+        "description": "Delete a locked group. The assets in it stay locked. Requires an elevated session.",
+        "operationId": "deleteLockedGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Delete a locked group",
+        "tags": [
+          "Locked groups"
+        ],
+        "x-immich-history": [
+          {
+            "version": "v3.4.0",
+            "state": "Added"
+          }
+        ],
+        "x-immich-permission": "lockedGroup.delete"
+      },
+      "get": {
+        "description": "Retrieve a specific locked group by its ID. Requires an elevated session.",
+        "operationId": "getLockedGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockedGroupResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Retrieve a locked group",
+        "tags": [
+          "Locked groups"
+        ],
+        "x-immich-history": [
+          {
+            "version": "v3.4.0",
+            "state": "Added"
+          }
+        ],
+        "x-immich-permission": "lockedGroup.read"
+      },
+      "put": {
+        "description": "Rename a locked group. Requires an elevated session.",
+        "operationId": "updateLockedGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LockedGroupUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockedGroupResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Update a locked group",
+        "tags": [
+          "Locked groups"
+        ],
+        "x-immich-history": [
+          {
+            "version": "v3.4.0",
+            "state": "Added"
+          }
+        ],
+        "x-immich-permission": "lockedGroup.update"
+      }
+    },
+    "/locked-groups/{id}/assets": {
+      "delete": {
+        "description": "Remove assets from a locked group without unlocking them. Requires an elevated session.",
+        "operationId": "removeAssetsFromLockedGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIdsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BulkIdResponseDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Remove assets from a locked group",
+        "tags": [
+          "Locked groups"
+        ],
+        "x-immich-history": [
+          {
+            "version": "v3.4.0",
+            "state": "Added"
+          }
+        ],
+        "x-immich-permission": "lockedGroup.asset"
+      },
+      "put": {
+        "description": "Add locked assets to a locked group. Requires an elevated session.",
+        "operationId": "addAssetsToLockedGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIdsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BulkIdResponseDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Add assets to a locked group",
+        "tags": [
+          "Locked groups"
+        ],
+        "x-immich-history": [
+          {
+            "version": "v3.4.0",
+            "state": "Added"
+          }
+        ],
+        "x-immich-permission": "lockedGroup.asset"
+      }
+    },
     "/map/markers": {
       "get": {
         "description": "Retrieve a list of latitude and longitude coordinates for every asset with location data.",
@@ -19249,6 +19625,15 @@
             }
           },
           {
+            "name": "isInLockedGroup",
+            "required": false,
+            "in": "query",
+            "description": "Filter locked assets by group membership (true for assets in any locked group, false for ungrouped assets only). Requires an elevated session.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
             "name": "isTrashed",
             "required": false,
             "in": "query",
@@ -19262,6 +19647,17 @@
             "required": false,
             "in": "query",
             "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lockedGroupId",
+            "required": false,
+            "in": "query",
+            "description": "Filter locked assets belonging to a specific locked group. Requires an elevated session.",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
               "type": "string"
             }
           },
@@ -19448,6 +19844,15 @@
             }
           },
           {
+            "name": "isInLockedGroup",
+            "required": false,
+            "in": "query",
+            "description": "Filter locked assets by group membership (true for assets in any locked group, false for ungrouped assets only). Requires an elevated session.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
             "name": "isTrashed",
             "required": false,
             "in": "query",
@@ -19461,6 +19866,17 @@
             "required": false,
             "in": "query",
             "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lockedGroupId",
+            "required": false,
+            "in": "query",
+            "description": "Filter locked assets belonging to a specific locked group. Requires an elevated session.",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
               "type": "string"
             }
           },
@@ -21338,6 +21754,10 @@
     {
       "name": "Jobs",
       "description": "Queues and background jobs are used for processing tasks asynchronously. Queues can be paused and resumed as needed."
+    },
+    {
+      "name": "Locked groups",
+      "description": "A locked group is a named collection of locked assets, only reachable with an elevated session."
     },
     {
       "name": "Libraries",
@@ -26906,6 +27326,72 @@
         ],
         "type": "object"
       },
+      "LockedGroupCreateDto": {
+        "properties": {
+          "name": {
+            "description": "Locked group name",
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "LockedGroupResponseDto": {
+        "properties": {
+          "assetCount": {
+            "description": "Number of locked assets in the group",
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "createdAt": {
+            "description": "Creation date",
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "description": "Locked group ID",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+            "type": "string"
+          },
+          "name": {
+            "description": "Locked group name",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "Last update date",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "assetCount",
+          "createdAt",
+          "id",
+          "name",
+          "updatedAt"
+        ],
+        "type": "object"
+      },
+      "LockedGroupUpdateDto": {
+        "properties": {
+          "name": {
+            "description": "Locked group name",
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
       "LogLevel": {
         "description": "Log level",
         "enum": [
@@ -29435,6 +29921,11 @@
           "systemConfig.update",
           "systemMetadata.read",
           "systemMetadata.update",
+          "lockedGroup.create",
+          "lockedGroup.read",
+          "lockedGroup.update",
+          "lockedGroup.delete",
+          "lockedGroup.asset",
           "tag.create",
           "tag.read",
           "tag.update",

@@ -1,9 +1,11 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import LockedGroupsBar from '#lib/components/locked/LockedGroupsBar.svelte';
   import UserPageLayout from '#lib/components/layouts/UserPageLayout.svelte';
   import OnEvents from '#lib/components/OnEvents.svelte';
   import ButtonContextMenu from '#lib/components/shared-components/context-menu/ButtonContextMenu.svelte';
   import EmptyPlaceholder from '#lib/components/shared-components/EmptyPlaceholder.svelte';
+  import AddToLockedGroupAction from '#lib/components/timeline/actions/AddToLockedGroupAction.svelte';
   import ChangeDate from '#lib/components/timeline/actions/ChangeDateAction.svelte';
   import ChangeLocation from '#lib/components/timeline/actions/ChangeLocationAction.svelte';
   import DeleteAssets from '#lib/components/timeline/actions/DeleteAssetsAction.svelte';
@@ -29,7 +31,19 @@
   let { data }: Props = $props();
 
   let timelineManager = $state<TimelineManager>() as TimelineManager;
-  const options = { visibility: AssetVisibility.Locked };
+  let ungroupedOnly = $state(false);
+  const options = $derived(
+    ungroupedOnly
+      ? { visibility: AssetVisibility.Locked, isInLockedGroup: false }
+      : { visibility: AssetVisibility.Locked },
+  );
+
+  const handleAddedToGroup = (assetIds: string[]) => {
+    assetMultiSelectManager.clear();
+    if (ungroupedOnly) {
+      timelineManager.removeAssets(assetIds);
+    }
+  };
 
   const handleEscape = () => {
     if (!assetMultiSelectManager.selectionActive) {
@@ -68,6 +82,7 @@
     onEscape={handleEscape}
     removeAction={AssetAction.SET_VISIBILITY_TIMELINE}
   >
+    <LockedGroupsBar bind:ungroupedOnly />
     {#snippet empty()}
       <EmptyPlaceholder text={$t('no_locked_photos_message')} title={$t('nothing_here_yet')} class="mx-auto mt-10" />
     {/snippet}
@@ -78,6 +93,7 @@
 {#if assetMultiSelectManager.selectionActive}
   <AssetSelectControlBar>
     <SelectAllAssets withText {timelineManager} assetInteraction={assetMultiSelectManager} />
+    <AddToLockedGroupAction onAdded={handleAddedToGroup} />
     <SetVisibilityAction unlock onVisibilitySet={handleMoveOffLockedFolder} />
     <ButtonContextMenu icon={mdiDotsVertical} title={$t('menu')}>
       <DownloadAction menuItem />

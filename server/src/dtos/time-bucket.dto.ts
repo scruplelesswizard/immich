@@ -10,6 +10,15 @@ const TimeBucketQueryBaseSchema = z
     albumId: z.uuidv4().optional().describe('Filter assets belonging to a specific album'),
     personId: z.uuidv4().optional().describe('Filter assets containing a specific person (face recognition)'),
     tagId: z.uuidv4().optional().describe('Filter assets with a specific tag'),
+    lockedGroupId: z
+      .uuidv4()
+      .optional()
+      .describe('Filter locked assets belonging to a specific locked group. Requires an elevated session.'),
+    isInLockedGroup: stringToBool
+      .optional()
+      .describe(
+        'Filter locked assets by group membership (true for assets in any locked group, false for ungrouped assets only). Requires an elevated session.',
+      ),
     isFavorite: stringToBool
       .optional()
       .describe('Filter by favorite status (true for favorites only, false for non-favorites only)'),

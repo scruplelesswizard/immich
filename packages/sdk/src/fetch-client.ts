@@ -2250,6 +2250,26 @@ export type ValidateLibraryResponseDto = {
     /** Validation results for import paths */
     importPaths?: ValidateLibraryImportPathResponseDto[];
 };
+export type LockedGroupResponseDto = {
+    /** Number of locked assets in the group */
+    assetCount: number;
+    /** Creation date */
+    createdAt: string;
+    /** Locked group ID */
+    id: string;
+    /** Locked group name */
+    name: string;
+    /** Last update date */
+    updatedAt: string;
+};
+export type LockedGroupCreateDto = {
+    /** Locked group name */
+    name: string;
+};
+export type LockedGroupUpdateDto = {
+    /** Locked group name */
+    name: string;
+};
 export type MapReverseGeocodeResponseDto = {
     /** City name */
     city: string | null;
@@ -6797,6 +6817,104 @@ export function validate({ id, validateLibraryDto }: {
     })));
 }
 /**
+ * Retrieve locked groups
+ */
+export function getLockedGroups(opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 200;
+        data: LockedGroupResponseDto[];
+    }>("/locked-groups", {
+        ...opts
+    }));
+}
+/**
+ * Create a locked group
+ */
+export function createLockedGroup({ lockedGroupCreateDto }: {
+    lockedGroupCreateDto: LockedGroupCreateDto;
+}, opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 201;
+        data: LockedGroupResponseDto;
+    }>("/locked-groups", oazapfts.json({
+        ...opts,
+        method: "POST",
+        body: lockedGroupCreateDto
+    })));
+}
+/**
+ * Delete a locked group
+ */
+export function deleteLockedGroup({ id }: {
+    id: string;
+}, opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchText(`/locked-groups/${encodeURIComponent(id)}`, {
+        ...opts,
+        method: "DELETE"
+    }));
+}
+/**
+ * Retrieve a locked group
+ */
+export function getLockedGroup({ id }: {
+    id: string;
+}, opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 200;
+        data: LockedGroupResponseDto;
+    }>(`/locked-groups/${encodeURIComponent(id)}`, {
+        ...opts
+    }));
+}
+/**
+ * Update a locked group
+ */
+export function updateLockedGroup({ id, lockedGroupUpdateDto }: {
+    id: string;
+    lockedGroupUpdateDto: LockedGroupUpdateDto;
+}, opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 200;
+        data: LockedGroupResponseDto;
+    }>(`/locked-groups/${encodeURIComponent(id)}`, oazapfts.json({
+        ...opts,
+        method: "PUT",
+        body: lockedGroupUpdateDto
+    })));
+}
+/**
+ * Remove assets from a locked group
+ */
+export function removeAssetsFromLockedGroup({ id, bulkIdsDto }: {
+    id: string;
+    bulkIdsDto: BulkIdsDto;
+}, opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 200;
+        data: BulkIdResponseDto[];
+    }>(`/locked-groups/${encodeURIComponent(id)}/assets`, oazapfts.json({
+        ...opts,
+        method: "DELETE",
+        body: bulkIdsDto
+    })));
+}
+/**
+ * Add assets to a locked group
+ */
+export function addAssetsToLockedGroup({ id, bulkIdsDto }: {
+    id: string;
+    bulkIdsDto: BulkIdsDto;
+}, opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 200;
+        data: BulkIdResponseDto[];
+    }>(`/locked-groups/${encodeURIComponent(id)}/assets`, oazapfts.json({
+        ...opts,
+        method: "PUT",
+        body: bulkIdsDto
+    })));
+}
+/**
  * Retrieve map markers
  */
 export function getMapMarkers({ fileCreatedAfter, fileCreatedBefore, isArchived, isFavorite, withPartners, withSharedAlbums }: {
@@ -8696,12 +8814,14 @@ export function tagAssets({ id, bulkIdsDto }: {
 /**
  * Get time bucket
  */
-export function getTimeBucket({ albumId, bbox, isFavorite, isTrashed, key, order, orderBy, personId, slug, tagId, timeBucket, userId, visibility, withCoordinates, withPartners, withStacked }: {
+export function getTimeBucket({ albumId, bbox, isFavorite, isInLockedGroup, isTrashed, key, lockedGroupId, order, orderBy, personId, slug, tagId, timeBucket, userId, visibility, withCoordinates, withPartners, withStacked }: {
     albumId?: string;
     bbox?: string;
     isFavorite?: boolean;
+    isInLockedGroup?: boolean;
     isTrashed?: boolean;
     key?: string;
+    lockedGroupId?: string;
     order?: AssetOrder;
     orderBy?: AssetOrderBy;
     personId?: string;
@@ -8721,8 +8841,10 @@ export function getTimeBucket({ albumId, bbox, isFavorite, isTrashed, key, order
         albumId,
         bbox,
         isFavorite,
+        isInLockedGroup,
         isTrashed,
         key,
+        lockedGroupId,
         order,
         orderBy,
         personId,
@@ -8741,12 +8863,14 @@ export function getTimeBucket({ albumId, bbox, isFavorite, isTrashed, key, order
 /**
  * Get time buckets
  */
-export function getTimeBuckets({ albumId, bbox, isFavorite, isTrashed, key, order, orderBy, personId, slug, tagId, userId, visibility, withCoordinates, withPartners, withStacked }: {
+export function getTimeBuckets({ albumId, bbox, isFavorite, isInLockedGroup, isTrashed, key, lockedGroupId, order, orderBy, personId, slug, tagId, userId, visibility, withCoordinates, withPartners, withStacked }: {
     albumId?: string;
     bbox?: string;
     isFavorite?: boolean;
+    isInLockedGroup?: boolean;
     isTrashed?: boolean;
     key?: string;
+    lockedGroupId?: string;
     order?: AssetOrder;
     orderBy?: AssetOrderBy;
     personId?: string;
@@ -8765,8 +8889,10 @@ export function getTimeBuckets({ albumId, bbox, isFavorite, isTrashed, key, orde
         albumId,
         bbox,
         isFavorite,
+        isInLockedGroup,
         isTrashed,
         key,
+        lockedGroupId,
         order,
         orderBy,
         personId,
@@ -9473,6 +9599,11 @@ export enum Permission {
     SystemConfigUpdate = "systemConfig.update",
     SystemMetadataRead = "systemMetadata.read",
     SystemMetadataUpdate = "systemMetadata.update",
+    LockedGroupCreate = "lockedGroup.create",
+    LockedGroupRead = "lockedGroup.read",
+    LockedGroupUpdate = "lockedGroup.update",
+    LockedGroupDelete = "lockedGroup.delete",
+    LockedGroupAsset = "lockedGroup.asset",
     TagCreate = "tag.create",
     TagRead = "tag.read",
     TagUpdate = "tag.update",
