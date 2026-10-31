@@ -1,3 +1,5 @@
+import { queryClient } from '#lib/queries/client.ts';
+import { getLockedGroupsQuery } from '#lib/queries/locked-group.query.ts';
 import { Route } from '#lib/route.ts';
 import { authenticate } from '#lib/utils/auth.ts';
 import { getFormatter } from '#lib/utils/i18n.ts';
@@ -12,6 +14,8 @@ export const load = (async ({ url }) => {
   if (!isElevated || !pinCode) {
     redirect(307, Route.pinPrompt({ continue: url.pathname + url.search }));
   }
+
+  await queryClient.query(getLockedGroupsQuery());
 
   const $t = await getFormatter();
 
