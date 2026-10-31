@@ -287,6 +287,17 @@ describe('TimelineManager', () => {
       expect(timelineManager.assetCount).toEqual(1);
     });
 
+    it.each([{ lockedGroupId: 'group-1' }, { isInLockedGroup: false }])(
+      'does not insert live-event assets when filtering by locked group (%o)',
+      async (options) => {
+        await timelineManager.updateOptions(options);
+
+        const asset = deriveLocalDateTimeFromFileCreatedAt(timelineAssetFactory.build());
+
+        expect(timelineManager.canInsertAssetFromLiveEvent(asset)).toBe(false);
+      },
+    );
+
     it('ignores new assets that do not match the tag filter', async () => {
       await timelineManager.updateOptions({ tagId: 'tag-1' });
 
